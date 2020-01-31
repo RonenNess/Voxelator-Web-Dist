@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43062336-12"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-43062336-12');
+	</script>
+
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Voxelator - Help</title>
+    <link href="externals/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="externals/fa.min.css" rel="stylesheet" type="text/css" media="all">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+</head>
+
+<!-- main content -->
+<body class="noselect">
+    <style>
+        h1
+        {
+            margin-top: 1em;
+        }
+
+        img
+        {
+            margin-bottom: 0.75em !important;
+        }
+    </style>
+    <div class="container">
+        <div style="margin-top:2em; border-radius: 12px; padding: 4rem 2rem; background-color: #e9ecef;">
+            <img src="img/3dlogo.png" style="width:100%; height:auto; margin-bottom:1em;">
+
+            <!-- start voxelator button -->
+            <a href="index.html"><button type="button" id="lunch-button" class="btn btn-lg btn-primary" style="width:100%; color:white;">Lunch Voxelator Now!</button></a>
+
+            <!-- INTRO -->
+            <h1><a onclick="gotoAnchor();" href="#intro"><i class="fas fa-link"></i></a> Intro</h1>
+            <p>
+                <a href="index.html">Voxelator</a> is a free online app to paint and edit voxel-based models.
+            </p>
+            <h3>What is a 'Voxel'</h3>
+            <p>
+                A voxel represents a single point on a regularly spaced three-dimensional grid. Or in simple words - Voxels are like 3d pixels. <br />
+                In recent years, partly due to the success of the game 'Minecraft', many games started using Voxels instead of regular polygon-based models. <br /><br />
+                Voxels-based graphics have many advantages, mainly in performance, the ability to generate meshes and complex levels at runtime, and the fact that its much easier to create Voxel-based 3d models than regular models.
+            </p>
+            <p>Voxelator is based on a simple 3d grid with constant voxel size of 1x1x1. Its core functionality is to add or remove voxels by clicking on existing voxels or the background grid.</p>
+            <h3>Requirements</h3>
+            <p>
+                To use Voxelator you need a browser that supports WebGL 2.0 and ES6 (JavaScript) 6 or higher.<br />
+                Voxelator would work best on Chrome, But you can also use Opera or FireFox. Edge should work too, but would probably be slower. <br /><br />
+                Note: officially I support Chrome, FireFox, and Opera. Use any other browser at your own risk!
+            </p>
+            <h3>Licensing</h3>
+            <p>
+                Voxelator is a free software and you can choose which license to attach to the models you produce with it, and use them for any purpose -- commercially included (provided you did not use any external resources with limiting licenses). <br /><br />
+                With that said, you <b>may not</b> do the following with Voxelator:
+                <ui>
+                    <li>You may not attempt to download its source and use it locally from your computer.</li>
+                    <li>You may not attempt to upload Voxelator to a different domain or site.</li>
+                    <li>You may not attempt to embed Voxelator in an external domain, using an iframe or any other technology.</li>
+                    <li>You may not attempt to redistribute Voxelator in any way, not commercially and not for free.</li>
+                    <li>You may not reuse Voxelator's code for any purpose.</li>
+                </ui>
+            </p>
+
+            <!-- UI layout -->
+            <h1><a onclick="gotoAnchor();" href="#layout"><i class="fas fa-link"></i></a> Layout</h1>
+            <p>The best way to learn about Voxelator's UI is to take the guided tour. When inside Voxelator click on 'Help' --> 'Show Guided Tour' to watch it.<br />
+            Since the tour covers all the main stuff, in this section we'll only go through the main things to notice:
+            </p>
+            <img src="img/screen1.png" style="width:100%; height:auto; margin-bottom:1em;">
+            <ul>
+                <li><b>The top panel</b> contains all the main menus in Voxelator. In 'Project' you can save / load projects, 'Edit' contain different transformations and effects you can apply, 'Exports' is to generate 3d models from your Voxelator project, 'Imports' is to import other projects or textures, 'View' contains view and UI related options, 'Camera' contains camera-related options and presets, and 'Help' is a useful help menu.</li>
+                <li><b>The top-left box</b> under the options panel is the tools selection box. Here you can switch between Voxels pencil, paint buket, selection tool, and other useful stuff.</li>
+                <li><b>The left-side colorful box</b> is your color palette. Right-click to select color, left click to change it (remember - changing colors in palette may affect existing voxels).</li>
+                <li><b>The bottom-center text</b> is a useful short info about the tool you're currently using. Check it out to learn about useful shortcuts.</li>
+                <li><b>The bottom-right box</b> is the layers window. Here you can create new layers, manage existing layers, delete, clone or merge layers. Layers are a great way to separate between different groups of voxels.</li>
+            </ul>
+            
+            <!-- Colors Palette -->
+            <h1><a onclick="gotoAnchor();" href="#colors-palette"><i class="fas fa-link"></i></a> Colors Palette</h1>
+            <img src="img/palette.png">
+
+            <p>
+            In Voxelator every voxel has a color index, which represent a color in the color palette. 
+            Using a palette simplifies a lot of aspects when editing the voxels, and it helps the artist in keeping a consistent artstyle. When exporting the model into one of the standard 3d formats, Voxelator will also export the colors palette as a texture.<br /><br />
+            Since Voxelator is palette-based you need to remember that you don't have unlimited number of colors, and changing one of the palette colors will affect all existing voxels which are using it.<br /><br />
+            Note that you can import a palette from any texture file from the 'Import' menu. Importing a palette will replace existing colors with unique colors from the imported texture. If the texture have less colors than the palette's max size, some colors will remain unchanged. 
+            </p>
+
+            <!-- Tools -->
+            <h1><a onclick="gotoAnchor();" href="#tools"><i class="fas fa-link"></i></a> Tools</h1>
+            <img src="img/tools.png">
+            <p>This section will briefly describe Voxelator's basic tools.</p>
+            
+            <h3><i class="fas fa-pencil-alt"></i> Voxels Pencil</h3>
+            <p>Voxels Pencil is the most basic tool used to draw and erase Voxels. <br />
+            To use it, pick color from the colors palette and left-click on grid or existing voxels to add new voxels, or right click to erase them.<br /><br />
+            The pencil tool have alternative modes: hold down shift to recolor existing voxels, or alt to push / pull voxels. 
+            <br /><br />
+            <b>Continous Draw</b>: if checked, Voxelator will draw / remove voxels continously while the mouse button is held down. If unchecked, every click will only set / remove a single voxel.
+            </p>
+
+            <h3><i class="fas fa-expand"></i> Selection Tool</h3>
+            <p>Selection tool allows you to select a group of voxels using a 3d bounding box. 
+                Once selection is set, transformations will only affect the selected voxels. 
+            </p>
+
+            <h3><i class="fas fa-fill-drip"></i> Voxels Bucket</h3>
+            <p>Flood fill voxels. This tool have several modes:
+                <br /><b>Left Mouse Button:</b> recolor group of voxels with the currently selected color.
+                <br /><b>Right Mouse Button:</b> recolor group of voxels with the currently selected color, but only on the plane you clicked on. 
+                <br /><b>Shift + Left Mouse Button:</b> fill empty space with voxels of the selected color - works on the plane you clicked on.
+                <br /><b>Shift + Right Mouse Button:</b> duplicate a plane of voxels. 
+            </p>
+
+            <h3><i class="fas fa-shapes"></i> Draw Shapes</h3>
+            <p>
+                Draw a set of predefined 3d shapes made of voxels: line, circle, or box.
+            </p>
+
+            <h3><i class="fas fa-arrows-alt"></i> Translation Tool</h3>
+            <p>
+                Move groups of voxels around (selected region or whole layer). To move voxels on X and Z axis use the arrow keys, to move on Y axis hold down shift and use Up and Down keys.
+            </p>
+
+            <h3><i class="fas fa-eraser"></i> Eraser</h3>
+            <p>
+                Eraser tool provide more ways to erase voxels than what provided by the Pencil tool.
+                <br /><b>Left Mouse Button:</b> remove individual voxel.
+                <br /><b>Right Mouse Button:</b> remove voxels while key down.
+                <br /><b>Shift + Left Mouse Button:</b> remove a layer of voxels.
+                <br /><b>Shift + Right Mouse Button:</b> remove a layer of voxels of the same color.
+            </p>
+
+            <!-- Layers -->
+            <h1><a onclick="gotoAnchor();" href="#layers"><i class="fas fa-link"></i></a> Layers</h1>
+            <img src="img/layers.png">
+            <p>
+                Layers are important aspect of Voxelator - they allow you to separate your model into multiple parts, which will not affect one another. <br />
+                When applying transformations or using tools you will only affect the layer you are currently editing. Furthermore, you can lock a layer to prevent accidental editing, or toggle layers visibility to quickly hide parts of the model without actually removing them.
+                <br /><br />
+                Another advantage of layers is performance; If your model is really huge and made from lots of Voxels, dividing them into multiple layers will mean Voxelator will have to work less on rebuilding the 3d mesh when you update it.
+                <br /><br />
+                The layers window is pretty self-explanatory, the only thing to notice is the <b>Auto Select Layer</b> option which will select layer automatically based on the voxel you currently point on. This option is useful when drawing voxels, but you might want to turn it off if you want to apply transformations on a specific layer, so you won't accidentaly switch layer before doing so without noticing.
+            </p>
+  
+            <!-- Project -->
+            <h1><a onclick="gotoAnchor();" href="#project"><i class="fas fa-link"></i></a> Voxelator Projects</h1>
+            <img src="img/project.png">
+            <p>
+                A "Voxelator project" is the entity containing your model's palette, layers, voxels, and settings.<br />
+                The project is everything you need to edit your model and export it to 3d formats. Its typically stored in files ending with '.vox' extensions, and its content is a plain JSON object. 
+                <br /><br />
+                The 'Project' menu provide options related to the Voxelator project:
+                <br /><b>Top text in blue</b> is the current name of your project. This name will be used when saving your project.
+                <br /><b>Rename</b>: allow you to rename the project.
+                <br /><b>New</b>: creates a new empty project.
+                <br /><b>Save</b>: save project file. Its recommended to save often and safe-keep your latest project files.
+                <br /><b>Load</b>: load a project file so you can continue working on it.
+            </p>
+
+            <!-- Edit -->
+            <h1><a onclick="gotoAnchor();" href="#edit"><i class="fas fa-link"></i></a> Edit Menu</h1>
+            <img src="img/edit.png">
+            <p>
+                The 'Edit' menu contains a collection of transformations you can apply, as well as the undo and redo buttons.
+            </p>
+            <h3>Undo / Redo</h3>
+            <p>
+                Cancel last action, or redo last action you removed with undo. 
+            </p>
+
+            <h3>Soften Edges</h3>
+            <img src="img/soften_edges.png">
+            <p>
+                Make edges or corners "softer" by removing voxels which are considered to be sharp corners. 
+            </p>
+
+            <h3>Expand</h3>
+            <img src="img/expand.png">
+            <p>
+                Expand some or all faces to their corresponding directions.
+            </p>
+
+            <h3>Shrink</h3>
+            <img src="img/shrink.png">
+            <p>
+                Shrink the model from all directions by removing all the currently-visible voxels and exposing the layers below.
+            </p>
+
+            <h3>Smooth Faces</h3>
+            <img src="img/smooth_faces.png">
+            <p>
+                Smooth faces by removing lonely voxels (voxels that have less neighbors than a configurable threshold).
+            </p>
+
+            <h3>Rotate</h3>
+            <img src="img/rotate.png">
+            <p>
+                Rotate layer or selected voxels around one of the axes.
+            </p>
+            
+            <h3>Flip / Mirror</h3>
+            <img src="img/flip.png">
+            <p>
+                Flip or mirror the active layer or selected voxels. <br /><br />
+                <b>Flip</b>: flip the original shape around one of the axes. <br />
+                <b>Mirror</b>: duplicate the shape and flip the duplication around one of the axes.
+            </p>
+
+            
+            <!-- Export -->
+            <h1><a onclick="gotoAnchor();" href="#export"><i class="fas fa-link"></i></a> Export</h1>
+            <img src="img/export.png">
+            <p>Exporting is one of the most important features of Voxelator: its the ability to convert your voxels-based shape into a standard 3d model formats, which you can later load into rendering engies and draw.
+                When you finish working on your model, usually you'll want to pick one of these formats and export to it.
+                <br /><br />
+                When exporting the model you will be faced with the following dialog:
+            </p>
+            <img src="img/export-dialog.png">
+            <p>
+                <ul>
+                <li>In the <b>'Export'</b> dropdown you can choose which parts of your model to export: everything, active layer, or all visible layers.</li>
+                <li>Next you can select <b>how to encode voxels colors</b> - you can either use the model's vertex colors (note: not supported by all formats), or use a texture representing the palette.</li>
+                <li>The last option, <b>Optimize Faces</b>, will optimize the result mesh to use fewer polygons and larger faces. The results would look the same, but be more efficient. If you uncheck this option, the result mesh will be composed of voxel faces, where every face is 2 polygons.</li>
+                </ul>
+            </p>
+            <h3>Exportint the Palette</h3>
+            <p>
+                Note that there's an additional option to export the colors palette as image. This will create a .png file with your palette, which you an later use with your models or import as palette. <br />
+                When exporting a model using texture for colors it will also export palette automatically, so you don't need to do this manually.
+            </p>
+            
+            <!-- Import -->
+            <h1><a onclick="gotoAnchor();" href="#import"><i class="fas fa-link"></i></a> Import</h1>
+            <img src="img/import.png">
+            <p>
+                Import allows you to import different things into the project. Currently the options are:
+            </p>
+            <h3>Image To Voxels</h3>
+            <p>This option will import an image and convert it into a plane of voxels. It will try to match the image's pixel colors to the current palette colors as closely as possible.</p>
+
+            <h3>Image To Palette</h3>
+            <p>This option will import an image into your colors palette. It will scan all the pixels in image and set its colors instead of the colors your palette currently have. If the image don't have enough unique colors to fill the pallete, not all colors will be replaced.</p>
+
+            <h3>Voxelator Project</h3>
+            <p>This option will import another Voxelator project and embed it into the current project. It will basically import all the layers from it, but won't replace the palette.</p>
+
+            <!-- Guided tour -->
+            <h1><a onclick="gotoAnchor();" href="#tour"><i class="fas fa-link"></i></a> Guided Tour</h1>
+            <img src="img/tour.png">
+            <p>
+                To learn more about Voxelator and its UI, check out the in-app guided tour (Help --> Show Guided Tour). 
+            </p>
+
+            <!-- Support -->
+            <h1><a onclick="gotoAnchor();" href="#support"><i class="fas fa-link"></i></a> Support / Feature Request</h1>
+            <p>
+                If you experience issues with Voxelator or have feature requests, please send an email to <a href="mailto:ronenness@gmail.com">ronenness@gmail.com</a>. <br />
+                For bugs, please include exact browser type and version + add a screenshot of errors from developer console if such appear (F12 on Chrome). <br />
+                
+                Note: please include "<b>Voxelator feature request</b>" or "<b>Voxelator problem</b>" in the title of the email. <br/><br/>
+            </p>
+            <hr />
+            <h5>
+                Want to see more interesting projects? Check out my portfolio at <a href="http://ronenness.com/" target="_blank">http://ronenness.com/</a>.
+            </h5>
+        </div>
+    </div>
+
+    <!-- init anchor tags -->
+    <script src="externals/jquery.js"></script>
+    <script>
+        function gotoAnchor() {
+            setTimeout(() => {
+                if (location.hash) {
+                    $('html, body').animate({
+                        scrollTop: $("a[href='" + location.hash + "']").offset().top
+                    }, 100);
+                }
+            }, 50);
+        }
+        gotoAnchor();
+    </script>
+
+    <!-- animate the lunch app button -->
+    <script>
+        var colIndex = 1;
+        var colors = ['primary', 'success', 'danger', 'warning', 'info'];
+        setInterval(() => {
+            for (var i = 0; i < colors.length; ++i) {
+                $("#lunch-button").removeClass('btn-' + colors[i]);
+            }
+            $("#lunch-button").addClass('btn-' + colors[colIndex++]);
+            if (colIndex >= colors.length) { colIndex = 0; }
+        }, 750);
+    </script>
+
+</body>
+</html>

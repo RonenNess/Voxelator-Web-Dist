@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43062336-12"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-43062336-12');
+	</script>
+  
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Voxelator</title>
+    <meta name="description" content="Free online Voxels editor tool.">
+    <meta name="author" content="Ronen Ness">
+    <link href="externals/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="externals/fa.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="css/styles.css" rel="stylesheet" type="text/css" media="all">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+  </head>
+
+  <body class="noselect" style="background: black;">
+
+    <!-- include jquery -->
+    <script src="externals/jquery.js"></script>
+
+    <!-- to open files via js -->
+    <input id="file-opener" type="file" style="display: none" />
+    
+    <!-- disable context menu -->
+    <script>document.addEventListener('contextmenu', event => event.preventDefault());</script>
+
+    <!-- to show stats -->
+    <p id="stats-label" class="on-screen-text" style="bottom:05px; left:15px;">Stats</p>
+
+    <!-- to show help text -->
+    <p id="help-text-label" class="on-screen-text" style="bottom:5px; text-align:center; width:50%; left:50%; margin-left:-25%;">Help</p>
+
+    <!-- main content -->
+    <div id="main-content" class="main-content">
+
+      <!-- top menu -->
+      <div id="top-menu" class="ui-element" style="z-index:5; position:fixed; top:0px; left:0px; display:block; width:100%" ondragstart="return false;">   
+
+        <!-- VOXEL OPTIONS -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="voxel-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-cube"></i> Project
+          </button>
+          <div class="dropdown-menu" aria-labelledby="voxel-options-dropdown">
+
+            <!-- show mesh name -->
+            <label style="padding-left:10px; padding-right:10px; color:blue" id="mesh-name-show" >"Mesh1"</label>
+
+            <!-- rename mesh -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.renameMesh();" >Rename</a>
+
+            <!-- new mesh -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.newMesh();" >New</a>
+
+            <!-- save mesh -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.saveProjectToFile();" >Save</a>
+
+            <!-- load mesh -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.loadProjectFromFile();" >Load</a>
+
+          </div>
+        </div> 
+
+                
+        <!-- EDIT MENU -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="transforms-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-wrench"></i> Edit
+          </button>
+          <div class="dropdown-menu" aria-labelledby="transforms-dropdown">
+            
+            <!-- undo / redo -->
+            <a class="dropdown-item disabled" id="undo-btn" href="#" data-placement="right" title="Undo last action." onclick="Voxelator.undo();" ><i class="fas fa-undo"></i> [Ctrl+Z] Undo</a>
+            <a class="dropdown-item disabled" id="redo-btn" href="#" data-placement="right" title="Redo last action." onclick="Voxelator.redo();" ><i class="fas fa-redo"></i> [Ctrl+Y] Redo</a>
+            <hr />
+
+            <!-- transformations -->
+            <a class="dropdown-item" href="#" data-placement="right" title="Makes edges less sharp by removing the corner pieces." onclick="Voxelator.applyTransformation('SoftenEdges');" ><i class="fas fa-vector-square"></i> Soften Edges</a>
+            <a class="dropdown-item" href="#" data-placement="right" title="Coat voxels with additional layer of the same color." onclick="Voxelator.applyTransformation('Expand');" ><i class="fas fa-expand-arrows-alt"></i> Expand</a>
+            <a class="dropdown-item" href="#" data-placement="right" title='Shrink the mesh by removing the outter layer of visible voxels and exposing the voxels below.' onclick="Voxelator.applyTransformation('Shrink');" ><i class="fas fa-compress-arrows-alt"></i> Shrink</a>
+            <a class="dropdown-item" href="#" data-placement="right" title="Remove bump voxels from surfaces, making them smoother." onclick="Voxelator.applyTransformation('SmoothFaces');" ><i class="fas fa-cube"></i> Smooth Faces</a>
+            <a class="dropdown-item" href="#" data-placement="right" title="Rotate the mesh around an axis." onclick="Voxelator.applyTransformation('Rotate');" ><i class="fas fa-sync-alt"></i> Rotate</a>
+            <a class="dropdown-item" href="#" data-placement="right" title="Flip or mirror the mesh around an axis." onclick="Voxelator.applyTransformation('Flip');" ><i class="fas fa-arrows-alt-h"></i> Flip / Mirror</a>
+            <hr />
+
+            <!-- selection -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.clearSelection();" >Clear Selection</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.deleteSelectedVoxels();" >Delete Selected Voxels</a>
+          </div>
+        </div> 
+
+     
+        <!-- EXPORT OPTIONS -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="export-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-file-export"></i> Export
+          </button>
+          <div class="dropdown-menu" aria-labelledby="export-options-dropdown">
+
+            <!-- export to .ply -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.exportModel('Ply');" >[.ply] Polygon File Format</a>
+
+            <!-- export to .gltf -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.exportModel('Gltf');" >[.gltf] GL Transmission Format</a>
+
+            <!-- export to .gltf -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.exportModel('Dae');" >[.dae] Collada (COLLAborative Design Activity)</a>
+
+            <!-- export to .obj -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.exportModel('Obj');" >[.obj] Wavefront 3D Object File</a>
+            
+            <!-- export to .stl -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.exportModel('Stl');" >[.stl] 3D CAD model</a>
+
+            <hr />
+
+            <!-- export palette -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.exportPalette();" >[.png] Palette as Image</a>
+
+          </div>
+        </div> 
+
+        <!-- IMPORT OPTIONS -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="import-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-file-import"></i> Import
+          </button>
+          <div class="dropdown-menu" aria-labelledby="import-options-dropdown">
+
+            <!-- import image -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.importImageFileAsVoxels();" >[Image] Image to Voxels</a>
+
+            <!-- import palette -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.importPaletteFile();" >[Image] Image to Palette</a>
+            
+            <!-- import other voxel file -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.importVoxelFile();" >[.vox] Voxelator Project</a>
+
+            <!-- import demo projects -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.importDemoProjects();" >Demo project</a>
+
+            <!-- import predefined palette -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.importPredefPalette();" >Predefined Palette</a>
+
+          </div>
+        </div> 
+
+        <!-- VIEW OPTIONS -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="view-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <div class="dropdown-menu" aria-labelledby="view-options-dropdown">
+
+            <!-- show / hide lines -->
+            <a class="dropdown-item" href="#">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="showOutline" onchange="Voxelator.voxelMesh.showOutline(this.checked)">
+                <label class="custom-control-label" for="showOutline">Show Outline</label>
+              </div>
+            </a>
+
+            <!-- show / hide wireframe -->
+            <a class="dropdown-item" href="#">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" checked class="custom-control-input" id="showWireframe" onchange="Voxelator.voxelMesh.showWireframe(this.checked)">
+                <label class="custom-control-label" for="showWireframe">Show Wireframe</label>
+              </div>
+            </a>
+
+            <!-- show / hide lightings -->
+            <a class="dropdown-item" href="#">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" checked id="showLights" onchange="Voxelator.enableLighting(this.checked)">
+                <label class="custom-control-label" for="showLights">Enable Lighting</label>
+              </div>
+            </a>
+
+            <!-- show / hide bounding box -->
+            <a class="dropdown-item" href="#">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="showBoundingBox" onchange="Voxelator.voxelMesh.showBoundingBox(this.checked)">
+                <label class="custom-control-label" for="showBoundingBox">Show Bounding Box</label>
+              </div>
+            </a>
+
+            <!-- show / hide axes -->
+            <a class="dropdown-item" href="#">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" checked class="custom-control-input" id="showAxes" onchange="Voxelator.showAxes(this.checked)">
+                <label class="custom-control-label" for="showAxes">Show Axes</label>
+              </div>
+            </a>
+
+            <!-- show / hide grid -->
+            <a class="dropdown-item" href="#">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" checked class="custom-control-input" id="showGrid" onchange="Voxelator.showGrid(this.checked)">
+                <label class="custom-control-label" for="showGrid">Show Grid</label>
+              </div>
+            </a>
+
+            <!-- set background options -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.showBackgroundSelectDialog();" >Change Background</a>
+
+            <!-- show palette texture -->
+            <a class="dropdown-item" href="#" onclick="Voxelator.showPaletteTexture();" >Show Palette Texture</a>
+
+          </div>
+        </div> 
+     
+        <!-- CAMERA OPTIONS -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="camera-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-video"></i> Camera
+          </button>
+          <div class="dropdown-menu" aria-labelledby="camera-options-dropdown">
+            <a class="dropdown-item" href="#" onclick="Voxelator.resetCamera();" >Reset</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('selection');" >Show Selection</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('front');" >Show Front</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('back');" >Show Back</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('left');" >Show Left</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('right');" >Show Right</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('top');" >Show Top</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.presetCamera('bottom');" >Show Bottom</a>
+          </div>
+        </div> 
+             
+        <!-- HELP MENU -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="help-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-info-circle"></i> Help
+          </button>
+          <div class="dropdown-menu" aria-labelledby="help-dropdown">
+            
+            <a class="dropdown-item" href="#" onclick="Voxelator.showGuidedTour();" >Show Guided Tour</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.showCameraControls();" >Camera Controls</a>
+            <a class="dropdown-item" target="_blank" href="help.html" >Open Help Pages</a>
+            <a class="dropdown-item" href="#" onclick="Voxelator.showAbout();" >About</a>
+          </div>
+        </div> 
+      </div>
+
+      <!-- internal screens elements (all screen except top menu) -->
+      <div style="position:fixed; top:40px; bottom:0px; left:0px; right:0px; display:block; pointer-events:none;">
+
+        <!-- tools selection -->
+        <div id="tools-menu" class="ui-element card draggable" style="width:92px; pointer-events: all;">
+          <p class="noselect panel-header">Tools</p>
+          <div class="card-body" style="padding:5px;">
+
+            <div class="btn-group-toggle" data-toggle="buttons" style="display:block; margin-bottom:5px;">
+              
+              <label class="btn btn-secondary btn-sm tool-btn active" title="[1] Voxels Pencil: paint and remove individual voxels.">
+                <input type="radio" name="tool-pencil" id="tool-pencil" autocomplete="off" checked onclick="Voxelator.selectEditorMode('VoxelsPencil')"><i class="fas fa-pencil-alt"></i> 
+              </label>
+              
+              <label class="btn btn-secondary btn-sm tool-btn" title="[2] Selection Tool: select region of voxels to apply effects and transformations on.">
+                <input type="radio" name="tool-select" id="tool-select" autocomplete="off" onclick="Voxelator.selectEditorMode('SelectionTool')"><i class="fas fa-expand"></i> 
+              </label>
+
+              <label class="btn btn-secondary btn-sm tool-btn" title="[3] Voxels Bucket: fill / recolor a region of voxels.">
+                <input type="radio" name="tool-paint-bucket" id="tool-paint-bucket" autocomplete="off" onclick="Voxelator.selectEditorMode('PaintBucket')"><i class="fas fa-fill-drip"></i> 
+              </label>
+
+              <label class="btn btn-secondary btn-sm tool-btn" title="[4] Draw Shapes: draw shapes from voxels, such as boxes, spheres, ect.">
+                <input type="radio" name="tool-shapes" id="tool-shapes" autocomplete="off" onclick="Voxelator.selectEditorMode('ShapesTool')"><i class="fas fa-shapes"></i> 
+              </label>
+
+              <label class="btn btn-secondary btn-sm tool-btn" title="[5] Translation Tool: move layers or selected voxels around.">
+                <input type="radio" name="tool-translate" id="tool-translate" autocomplete="off" onclick="Voxelator.selectEditorMode('TranslationTool')"><i class="fas fa-arrows-alt"></i> 
+              </label>
+
+              <label class="btn btn-secondary btn-sm tool-btn" title="[6] Eraser: erase voxels and voxels groups.">
+                <input type="radio" name="tool-eraser" id="tool-eraser" autocomplete="off" onclick="Voxelator.selectEditorMode('EraserTool')"><i class="fas fa-eraser"></i> 
+              </label>
+
+            </div>
+            
+            <!-- continous draw for pencil mode -->
+            <div style="font-size:70%; display:none" class="custom-control custom-checkbox" id="continous-paint-div" title="If checked, will draw voxels continously while mouse button is down. If not, will only draw / remove individual voxel per mouse click.">
+              <input type="checkbox" class="custom-control-input" id="continous-paint" checked>
+              <label style="cursor: pointer;" class="custom-control-label" for="continous-paint">Continous Draw</label>
+            </div>
+
+            <!-- shape selection for shapes tool -->
+            <div style="padding:0px; display:none" class="custom-control custom-checkbox" id="shapes-select-div">
+              <select id="shapes-select" class="browser-default custom-select" style="font-size: 75%;background-color: #007bff;height: 30px;line-height: 10px;color: white;" >
+                <option selected value="Line">Line</option>
+                <option value="Box">Box</option>
+                <option value="Sphere">Sphere</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- colors palette -->
+        <div id="colors-palette" class="ui-element card draggable" style="width:95px; pointer-events: all;">
+          <p class="noselect panel-header">Color Palette</p>
+          <div class="card-body" style="padding: 5px;">
+              <div id="palette-container" style="width:100%;"></div>
+          </div>
+        </div>
+
+        <!-- layers menu -->
+        <div id="layers-menu" class="ui-element card draggable" style="width:250px; height:250px; bottom:2px; right:2px; position:fixed; pointer-events:all;">
+          <p class="noselect panel-header">Layers</p>
+          <div class="card-body" style="padding:5px; overflow-y: scroll;">
+            <div>
+              <table class="table" style="table-layout:fixed; color:#d8d8d8;">
+                <tbody id="layers-table">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <i class="fas fa-plus layers-button" title="Create new layer" onclick="Voxelator.voxelMesh.addLayer(Voxelator.activeLayer);"></i>
+            <i class="fas fa-chevron-up layers-button" title="Move layer up" onclick="Voxelator.moveActiveLayerUp();"></i>
+            <i class="fas fa-chevron-down layers-button" title="Move layer down" onclick="Voxelator.moveActiveLayerDown();"></i>
+            <i class="fas fa-trash layers-button" title="Delete layer" onclick="Voxelator.showDeleteLayerDialog();"></i>
+            <i class="fas fa-clone layers-button" title="Clone layer / selected voxels" onclick="Voxelator.cloneActiveLayer();"></i>
+            <i class="fas fa-cut layers-button" title="Cut selected voxels to a new layer" onclick="Voxelator.cutSelectedVoxelsToNewLayer();"></i>
+            <i class="fas fa-layer-group layers-button" title="Merge layer down" onclick="Voxelator.mergeActiveLayerDown();"></i>
+
+            <div class="custom-control custom-checkbox" id="auto-select-layer-div" title="If checked, Voxelator will select active layer automatically based on the voxels you currently point on.">
+              <input type="checkbox" class="custom-control-input" id="auto-select-layer" checked>
+              <label style="cursor: pointer;" class="custom-control-label" for="auto-select-layer">Auto Select Layer</label>
+            </div>
+            
+          </div>
+
+        </div>
+
+      </div>    
+    </div>
+
+    <!-- MODAL FOR EXPORTS -->
+    <div class="ui-element modal fade" id="export-modal" tabindex="-1" role="dialog" aria-labelledby="export-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+          <!-- export modal header -->
+          <div class="modal-header">
+            <h5 class="modal-title">Export Mesh to <span id="export-mesh-description">type</span> file</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <!-- export modal body-->
+          <div class="modal-body">
+            
+            <!-- filename -->
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Filename</span>
+              </div>
+              <input type="text" class="form-control" id="exported-mesh-name" placeholder="filename" aria-label="Filename" aria-describedby="basic-addon1">
+            </div>
+
+            <!-- axis -->
+            <label>Export:</label>
+            <select id="export-layers-type" class="browser-default custom-select">
+              <option selected value="visible">All visible layers</option>
+              <option value="everything">Everything, including hidden layers</option>
+              <option value="active_layer">Selected layer only</option>
+            </select>
+
+            <!-- save as binary -->
+            <div class="custom-control custom-checkbox" id="export-save-binary-div">
+              <br />
+              <input type="checkbox" class="custom-control-input" id="export-save-binary" checked>
+              <label style="cursor: pointer;" class="custom-control-label" for="export-save-binary">Save as binary</label>
+            </div>
+
+            <!-- color mode -->
+            <div style="margin-top: 10px;">
+              <p style="margin-bottom: 4px;">Encode voxels color as:</p>
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" id="export-as-vertex-color" name="defaultExampleRadios" checked>
+                <label style="cursor: pointer !important;" class="custom-control-label" for="export-as-vertex-color">Vertex Color</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" id="export-as-texture" name="defaultExampleRadios">
+                <label style="cursor: pointer !important;" class="custom-control-label" for="export-as-texture">Texture</label style="cursor: pointer !important;">
+              </div>
+              <label style="color:crimson" id="export-color-mode-comment">Some comment.</label>
+            </div>
+
+            <!-- optimize faces -->
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="export-optimize" checked>
+              <label style="cursor: pointer;" class="custom-control-label" for="export-optimize">Optimize Faces</label>
+            </div>
+
+          </div>
+
+          <!-- export buttons -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="export-btn">Export & Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- MODAL FOR IMPORT IMAGE -->
+    <div class="ui-element modal fade" id="import-img-modal" tabindex="-1" role="dialog" aria-labelledby="import-img-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+          <!-- import modal header -->
+          <div class="modal-header">
+            <h5 class="modal-title">Import Image To Voxels</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <!-- import modal body-->
+          <div class="modal-body">
+
+            <!-- preview pic -->
+            <img style="max-width: 100%; max-height: 500px; height: auto;" id="import-img-preview" />
+            <hr />
+
+            <!-- import into new layer -->
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="import-img-new-layer" checked >
+              <label class="custom-control-label" for="import-img-new-layer">Import Into New Layer</label>
+            </div>
+            <br />
+
+            <!-- depth slider -->
+            <div data-role="rangeslider" class="ui-content">
+              <label for="import-img-depth">Depth: <span id="import-img-depth-show">1</span></label>
+              <input type="range" class="custom-range" onchange="$('#import-img-depth-show').text($(this).val())" value="1" min="1" max="50" id="import-img-depth">
+            </div>
+
+            <!-- axis -->
+            <label>Import Into Axes:</label>
+            <select id="import-image-axis" class="browser-default custom-select">
+              <option selected value="XY">XY</option>
+              <option value="XZ">XZ</option>
+              <option value="ZY">ZY</option>
+            </select>
+
+            <!-- flip -->
+            <label>Flip:</label>
+            <select id="import-image-flip" class="browser-default custom-select">
+              <option selected value="None">None</option>
+              <option value="Horizontal">Horizontal</option>
+              <option value="Vertical">Vertical</option>
+              <option value="Both">Both</option>
+            </select>
+
+          </div>
+
+          <!-- import buttons -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="import-btn">Import</button>
+            <button type="button" class="btn btn-secondary" id="import-cancel-btn" data-dismiss="modal">Cancel</button>
+          </div>
+
+          <!-- progressbar -->
+          <div class="progress">
+            <div id="import-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- SPLASH SCREEN -->
+    <div class="ui-element modal fade" id="splash-screen" tabindex="-1" role="dialog" aria-labelledby="splash-screen" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+          <!-- import modal body-->
+          <div class="modal-body">
+
+            <!-- preview pic -->
+            <img style="width: 100%; height: auto;" src="img/splash-full.png" /> <hr />
+            <h5 style="margin-bottom: 0.2em;">
+              Welcome to Voxelator - the free online voxel editing tool!
+            </h5>
+            <p>To begin, click on "New Project" or "Load Project". To learn more, visit the Help Pages.</p>
+            <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal" aria-label="Close">New Project</button>
+            <button type="button" onclick="Voxelator.loadProjectFromFile();" class="btn btn-lg btn-primary" data-dismiss="modal" aria-label="Close">Load Project</button>
+            <a href="help.html" target="_blank"><button type="button" class="btn btn-lg btn-success">Help Pages</button></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- include bootbox for easier modals -->
+    <script src="externals/bootbox.js"></script>
+
+    <!-- include main engine and init -->
+    <script src="dist/libs.min.js"></script>
+    <script src="dist/voxelator.obs.js"></script>
+    <script>Voxelator.initialize();</script>
+
+    <!-- include bootstrap js and miscs -->
+    <script src="externals/bootstrap.bundle.min.js"></script>
+    <script src="externals/interact.js"></script>
+    
+    <!-- for guided tour -->
+    <link href="externals/enjoyhint.css" rel="stylesheet">
+    <script src="externals/enjoyhint.min.js"></script>
+
+    <!-- init tooltip -->
+    <script>
+    $(function () {
+      $('[title]').tooltip({
+            delay: {
+            show: 750,
+            hide: 0
+        }
+      });
+    })
+    </script>
+
+    <!-- show splash screen -->
+    <script>
+      $('#splash-screen').modal();
+    </script>
+
+  </body>
+
+</html>
