@@ -541,6 +541,12 @@
       $('#splash-screen').modal();
     </script>
 
+    <!-- protection against accidental page leave -->
+    <script>
+      window.onbeforeunload = function(e) {
+        return 'Leave Voxelator and discard unsaved changes?';
+      }; 
+    </script>
   </body>
 
 </html>

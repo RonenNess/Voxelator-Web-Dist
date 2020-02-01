@@ -76,6 +76,7 @@ body {
     position:fixed; 
     color:black; 
     opacity: 0.7;
+    pointer-events: none;
 }
 
 /* for font-awesome - add distance from text on the right. */
