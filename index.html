@@ -383,7 +383,7 @@
             <div class="custom-control custom-checkbox" id="export-save-binary-div">
               <br />
               <input type="checkbox" class="custom-control-input" id="export-save-binary" checked>
-              <label style="cursor: pointer;" class="custom-control-label" for="export-save-binary">Save as binary</label>
+              <label style="cursor: pointer;" class="custom-control-label" title="Will save export as binary format, usually taking up less space and faster to load." for="export-save-binary">Save as binary</label>
             </div>
 
             <!-- color mode -->
@@ -402,8 +402,14 @@
 
             <!-- optimize faces -->
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="export-optimize" checked>
+              <input type="checkbox" onchange="$('#export-optimize-sub-zero').attr('disabled', !$(this).prop('checked'));" class="custom-control-input" id="export-optimize" checked>
               <label style="cursor: pointer;" class="custom-control-label" for="export-optimize">Optimize Faces</label>
+            </div>
+
+            <!-- optimize subzero -->
+            <div class="custom-control custom-checkbox" id="export-optimize-sub-zero-div">
+              <input type="checkbox" class="custom-control-input" id="export-optimize-sub-zero">
+              <label style="cursor: pointer;" class="custom-control-label" title="If checked, will cull out the bottom face of the exported mesh. This optimization is useful for objects that should always stand on ground with their bottom hidden, like trees." for="export-optimize-sub-zero">Cull out bottom</label>
             </div>
 
           </div>
