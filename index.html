@@ -300,10 +300,12 @@
                 <option selected value="Line">Line</option>
                 <option value="Box">Box</option>
                 <option value="Sphere">Sphere</option>
-                <option value="Symmetrical Sphere">Symmetrical Sphere</option>
-              </select>
+              </select> 
+              <div class="custom-control custom-checkbox" id="symmetrical-shape-div">
+                <input type="checkbox" class="custom-control-input" id="symmetrical-shape">
+                <label style="cursor: pointer; font-size:75%; line-height: 2em;" class="custom-control-label" for="symmetrical-shape">Equilateral</label>
+              </div>
             </div>
-
           </div>
         </div>
 
@@ -336,7 +338,7 @@
             <i class="fas fa-layer-group layers-button" title="Merge layer down" onclick="Voxelator.mergeActiveLayerDown();"></i>
 
             <div class="custom-control custom-checkbox" id="auto-select-layer-div" title="If checked, Voxelator will select active layer automatically based on the voxels you currently point on.">
-              <input type="checkbox" class="custom-control-input" id="auto-select-layer" checked>
+              &nbsp;<input type="checkbox" class="custom-control-input" id="auto-select-layer" checked>
               <label style="cursor: pointer;" class="custom-control-label" for="auto-select-layer">Auto Select Layer</label>
             </div>
             
@@ -441,38 +443,56 @@
           <div class="modal-body">
 
             <!-- preview pic -->
-            <img style="max-width: 100%; max-height: 500px; height: auto;" id="import-img-preview" />
+            <img style="max-width: 100%; max-height: 400px; height: auto;" id="import-img-preview" />
             <hr />
+            
+            <!-- left panel -->
+            <div style="width:45%; float:left;">
 
-            <!-- import into new layer -->
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="import-img-new-layer" checked >
-              <label class="custom-control-label" for="import-img-new-layer">Import Into New Layer</label>
+              <!-- depth slider -->
+              <div data-role="rangeslider" class="ui-content" title="Duplicate voxels on the remaining axis to give depth to the imported image. If depth map is used, this value will be the max depth which will be used for white pixels.">
+                <label for="import-img-depth">Depth: <span id="import-img-depth-show">1</span></label>
+                <input type="range" class="custom-range" onchange="$('#import-img-depth-show').text($(this).val())" value="1" min="1" max="50" id="import-img-depth">
+              </div>
+
+              <!-- depth image -->
+              <div class="ui-content" title="Depth map is a texture that determine the depth of every pixel from the imported image - the brighter the pixel in depth map, the bigger the depth (based on the depth slider on the left).">
+                <label for="import-image-depth-map">Depth map:</label><br />
+                <img onclick="Voxelator.loadImportDepthMapImage();" id="import-image-depth-map" style="border: black 1px solid; width: 100%; height:100px; cursor:pointer; object-fit: contain;" >
+              </div>
             </div>
-            <br />
 
-            <!-- depth slider -->
-            <div data-role="rangeslider" class="ui-content">
-              <label for="import-img-depth">Depth: <span id="import-img-depth-show">1</span></label>
-              <input type="range" class="custom-range" onchange="$('#import-img-depth-show').text($(this).val())" value="1" min="1" max="50" id="import-img-depth">
+            <!-- right panel -->
+            <div style="width:45%; float:right;">
+
+              <!-- axis -->
+              <label>Import Into Axes:</label>
+              <select id="import-image-axis" class="browser-default custom-select">
+                <option selected value="XY">XY</option>
+                <option value="XZ">XZ</option>
+                <option value="ZY">ZY</option>
+              </select>
+
+              <!-- flip -->
+              <label>Flip:</label>
+              <select id="import-image-flip" class="browser-default custom-select">
+                <option selected value="None">None</option>
+                <option value="Horizontal">Horizontal</option>
+                <option value="Vertical">Vertical</option>
+                <option value="Both">Both</option>
+              </select>
+
+              
+              <!-- import into new layer -->
+              <br /><br />
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="import-img-new-layer" checked >
+                <label class="custom-control-label" for="import-img-new-layer">Import Into New Layer</label>
+              </div>
+
             </div>
 
-            <!-- axis -->
-            <label>Import Into Axes:</label>
-            <select id="import-image-axis" class="browser-default custom-select">
-              <option selected value="XY">XY</option>
-              <option value="XZ">XZ</option>
-              <option value="ZY">ZY</option>
-            </select>
-
-            <!-- flip -->
-            <label>Flip:</label>
-            <select id="import-image-flip" class="browser-default custom-select">
-              <option selected value="None">None</option>
-              <option value="Horizontal">Horizontal</option>
-              <option value="Vertical">Vertical</option>
-              <option value="Both">Both</option>
-            </select>
+            <div style="clear:both"></div>
 
           </div>
 
