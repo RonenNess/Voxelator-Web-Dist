@@ -381,13 +381,6 @@
               <option value="active_layer">Selected layer only</option>
             </select>
 
-            <!-- save as binary -->
-            <div class="custom-control custom-checkbox" id="export-save-binary-div">
-              <br />
-              <input type="checkbox" class="custom-control-input" id="export-save-binary" checked>
-              <label style="cursor: pointer;" class="custom-control-label" title="Will save export as binary format, usually taking up less space and faster to load." for="export-save-binary">Save as binary</label>
-            </div>
-
             <!-- color mode -->
             <div style="margin-top: 10px;">
               <p style="margin-bottom: 4px;">Encode voxels color as:</p>
@@ -399,21 +392,29 @@
                 <input type="radio" class="custom-control-input" id="export-as-texture" name="defaultExampleRadios">
                 <label style="cursor: pointer !important;" class="custom-control-label" for="export-as-texture">Texture</label style="cursor: pointer !important;">
               </div>
-              <label style="color:crimson" id="export-color-mode-comment">Some comment.</label>
+              <p style="color:crimson" id="export-color-mode-comment">Some comment.</p>
             </div>
+
+            <!-- optimizations -->
+            <p style="margin-bottom:0.2em; margin-top: 0.5em;">Optimizations:</p>
 
             <!-- optimize faces -->
             <div class="custom-control custom-checkbox">
               <input type="checkbox" onchange="$('#export-optimize-sub-zero').attr('disabled', !$(this).prop('checked'));" class="custom-control-input" id="export-optimize" checked>
-              <label style="cursor: pointer;" class="custom-control-label" for="export-optimize">Optimize Faces</label>
+              <label style="cursor: pointer;" class="custom-control-label" for="export-optimize" title="If checked, exported model will have merged faces when possible, meaning less faces to draw. Note: if you need square voxel-like faces, disable this option." >Merge voxel faces</label>
             </div>
 
             <!-- optimize subzero -->
             <div class="custom-control custom-checkbox" id="export-optimize-sub-zero-div">
               <input type="checkbox" class="custom-control-input" id="export-optimize-sub-zero">
-              <label style="cursor: pointer;" class="custom-control-label" title="If checked, will cull out the bottom face of the exported mesh. This optimization is useful for objects that should always stand on ground with their bottom hidden, like trees." for="export-optimize-sub-zero">Cull out bottom</label>
+              <label style="cursor: pointer;" class="custom-control-label" title="If checked, will cull out the bottom face of the exported mesh. This optimization is useful for objects that should always stand on ground with their bottom hidden, like trees." for="export-optimize-sub-zero">Remove bottom faces</label>
             </div>
 
+            <!-- save as binary -->
+            <div class="custom-control custom-checkbox" id="export-save-binary-div">
+              <input type="checkbox" class="custom-control-input" id="export-save-binary" checked>
+              <label style="cursor: pointer;" class="custom-control-label" title="Will save export as binary format, usually taking up less space and faster to load." for="export-save-binary">Save as binary</label>
+            </div>
           </div>
 
           <!-- export buttons -->
@@ -444,6 +445,7 @@
 
             <!-- preview pic -->
             <img style="max-width: 100%; max-height: 400px; height: auto;" id="import-img-preview" />
+            <p id="preview-pic-size"></p>
             <hr />
             
             <!-- left panel -->
